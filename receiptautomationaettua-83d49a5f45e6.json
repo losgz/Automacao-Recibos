@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "receiptautomationaettua",
+  "private_key_id": "83d49a5f45e611f08380eea42aef9521a0546de1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDaH0ARSCbre2k1\nxVoa1+WUhXq5CXBWjI11/+iuJijfCLCexU8s3biRR/SVJ8yXq1fmCs/FTHdQyLUe\nGQXyUIsxcXaZLLOZU0Y33dsia9C20YkQJ4DjC922AIUvLFMspyKM+7TqUpJlqR05\niE4bDU6wIENZjYRPGFwyFOE2CWUu0TGiKKEFuSUw3xOHHlgQGcVdfjnIAvRxF8wc\nKGugjT0HYs06tTXrhcYcQxHnqwCh7dEvyRxJK6mzPOdo+9ZB4PhwSrfuLMgByDga\niL10CS2a33hvgNY2/+3QiMZP66c3kZguHv8DROb5apTYCQ3XryesIYkooyNarrh/\nN8a4Z8iJAgMBAAECggEAQ+cKmNavVwt6O0UOweCIFe5fwA7SK/9hYmSiWOSEQLqB\n0Ut3VG5JsOCHoY9cP7MVkAW5nKArXLi+uXnswfyU+HVsCE9EMe0cpPOp7lNGDEO6\nuY6yrvvYr3oF/CN+WR5GwUDylyfRb1hwQqLOPdmsr2O707scf0sEGIsreRj/qMzf\nkqm6hEkvugOs1Mv1or6oy2XZ5y05xQp2Qkh2icN4BWT7kwwIoqfIqNd+7Aa3jU6I\nE2iA3rnraAZxJ2BLPLanjFdqXn1tynfhm73caz0sXtXYV5yk1NFD5WbTA3Cflgq0\n21w42eaAya+qFBhvcymYjwovGZ2BFego0BfYAPeY6QKBgQD7GXrhH8E6B9IRnHk4\nI4o09UeWfX0h7J9DjDMJHz0L0scSza2mU+xhWPzmw+gLRtBvHSZABfvDqtkGFzqf\n7xhWBrHD7GpWPGM6p/rMjHzLQiWdOvcPFeaYF1UnqcQKQF7QdEotDOWRqLmrZu2S\nZ9BrAiAXsvK/8Nxr9UPVcgH6xwKBgQDeYQLowPTID8l9YYNKWhL+07CPmnAgvK6Z\nHbbi8QN6TE+gU3y2B6u40zuhnzYTvxHFhv9CQrNMH03oH16nd3mOEpQ57KGw8Bx8\n6aO/QGq8Y7CoETdiLTGeUQvDQprqGeB0lVqaH4mJD1Yk5XGqhXbYQuDq5lXih6T+\nD9Re+5FSLwKBgQDF1c513uILyaueCo2LSJ0UmogbrqVPfDIDM0vmjQE49om4a+q8\nGHUuQcGIQ6PodpO0Z+ACI3S4NjylStn6tpOS+9VFS1iAtzVrOnwkey+7qVMfbRzI\nevXisMd754q4lPze+jCTDA031RrsS700U6znEpacdXZC+g+A043tdtTOcwKBgChx\nfkT0atBDxsJNzMHl9dRwjYjgbooVpq9kLxHBAX/phwXCiUjVxk5b5Fl1ijE3K7U/\n4waa+N7cRp/zrJRKb0n+aQTL23BBivzQxR4QShkvDD7UurzZOU/wr3H4mBIBWMf7\nLbogCDRsHJ+jNvPrR/z21M8DyxTi1If8OwR3PiuzAoGAJbv1wvVOTPwEKnYZOVD9\nSW5obW127W21tHTdFoVLmrmObjEv0vFWvTrUICWnLH8KJUVzyu6k+fJBYFETSr9t\neOpIv8nD2TGEAsSthcSSu7ZuPLyXRpqKlLD2J3PZYy3zQZf1Od/ZPnD2Iltk0rON\ndyVlpjk+SrjVOvac0KFQopI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "receiptautomation@receiptautomationaettua.iam.gserviceaccount.com",
+  "client_id": "111322593617853246092",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/receiptautomation%40receiptautomationaettua.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
