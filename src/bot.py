@@ -70,7 +70,7 @@ class Receipt:
                 await ctx.send("Insira o número.")
 
             case 5:
-                await ctx.send("Insira a data.")
+                await ctx.send("Insira a data (YY/MM/DD).")
 
             case 6:
                 await ctx.send("Insira o NIF.")
@@ -167,20 +167,20 @@ class Receipt:
                 case 5:
                     try:
                         data = message.content.split("/")
-                        assert 2020 <= int(data[0]) <= 2030 and len(data[0]) == 4
+                        assert 0 <= int(data[0]) <= 1999 and len(data[0]) == 4
                         assert 1 <= int(data[1]) <= 12 and 1 <= len(data[1]) <= 2
                         assert 1 <= int(data[2]) <= 31 and 1 <= len(data[2]) <= 2
                         self.data["date"] = message.content
                         self.form_step += 1
                         await self.rec_form(message.channel)
-                    except Exception:
+                    except AssertionError:
                         await message.channel.send("Data inválida")
 
                 # NIF
                 case 6:
                     try:
-                        num = int(message.content)
-                        self.data["num"] = num
+                        nif = int(message.content)
+                        self.data["nif"] = nif
                         self.form_step += 1
                         await self.rec_form(message.channel)
                     except Exception:
@@ -200,7 +200,7 @@ class Receipt:
 
                 # Descrição
                 case 9:
-                    self.data["descrição"] = message.content
+                    self.data["description"] = message.content
                     self.form_step += 1
                     await self.rec_form(message.channel)
 
@@ -212,14 +212,14 @@ class Receipt:
 
                 # PAJ
                 case 11:
-                    check = True if message.content == "y" else False
+                    check = True if message.content in "yYes" else False
                     self.data["paj"] = check
                     self.form_step += 1
                     await self.rec_form(message.channel)
 
                 # RAC
                 case 12:
-                    check = True if message.content == "y" else False
+                    check = True if message.content in "yYes" else False
                     self.data["rac"] = check
                     self.form_step += 1
                     await self.rec_form(message.channel)

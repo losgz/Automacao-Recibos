@@ -21,29 +21,55 @@ class Sheets:
 
     def addEntry(self, data: dict):
 
+        if not data:
+            print("Null data")
+            return
+        
+        if len(data.keys()) != 12:
+            print("Bad data")
+            return
+
         request = {
             "requests": [
-                {
+                { #Add content
                     "updateCells": {
-                        "range": {
+                        "start": {
                             "sheetId": 0,
-                            "startRowIndex": self.getLastRow(),
-                            "endRowIndex": self.getLastRow() + 1,
-                            "startColumnIndex": 0,
-                            "endColumnIndex": len(data.values())
+                            "rowIndex": self.getLastRow(),
+                            "columnIndex": 0,
                         },
                         "rows": [
                             {
                                 "values": fullEntry(data)
                             }
                         ],
-                        "fields": "userEnteredValue"
+                        "fields": "userEnteredValue, hyperlink"
                     }
-                }
+                },
+                { #Add checkboxes in the last 2 fields
+                    'repeatCell': { 
+                        'cell': {
+                            'dataValidation': {
+                                'condition': {
+                                    'type': 'BOOLEAN'
+                                }
+                            }
+                        },
+                        "range": {
+                            "sheetId": 0,
+                            "startRowIndex": self.getLastRow(),
+                            "endRowIndex": self.getLastRow() + 1,
+                            "startColumnIndex": 10,
+                            "endColumnIndex": 12
+                        },
+                        'fields': 'dataValidation'
+                    }
+                },
             ]
         }
 
         self.batch(request, SPREADSHEET_ID)
+        self.lastRow += 1
 
     def batch(self, request: dict, spreadID: int = 0):
         response = self.service.spreadsheets().batchUpdate(
@@ -61,4 +87,41 @@ class Sheets:
         return self.lastRow
 
 def fullEntry(data: dict) -> list:
-    return [{"userEnteredValue": {"stringValue": str(v)}} for v in data.values()]
+    cellData = []
+    for k, v in data.items():
+        cell = None
+
+        match k:
+            case "link":
+                cell = hyperlinkCell(str(v))
+            case "paj" | "rac":
+                cell = booleanCell(v)
+            case _:
+                cell = textCell(str(v))
+
+        cellData.append(cell)
+
+    return cellData
+
+def textCell(text: str) -> dict:
+    cell = userEnteredDataCell()
+    cell["userEnteredValue"].setdefault("stringValue", text)
+    return cell
+
+def booleanCell(initialValue: bool) -> dict:
+    cell = userEnteredDataCell()
+    cell["userEnteredValue"].setdefault("boolValue", initialValue)
+    return cell
+
+def userEnteredDataCell() -> dict:
+    return {
+        "userEnteredValue": {
+        }
+    }
+
+def hyperlinkCell(link: str) -> dict:
+    return {    "hyperlink": link, 
+                "userEnteredValue": {
+                    "stringValue": link
+                }
+            }
