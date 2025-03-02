@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import sheets
 
 # Enable all necessary intents
 intents = discord.Intents.default()
@@ -33,11 +34,16 @@ AREAS = [
     "Outros",
 ]
 
-DOC_TYPE = ["Ato Único", "Estrangeiro", "Fatura", "Fatura-Recibo", "Recibo-Verde"]
+DOC_TYPE = [
+    "Ato Único",
+    "Estrangeiro",
+    "Fatura",
+    "Fatura-Recibo",
+    "Recibo-Verde"
+]
 
 # Dictionary to track forms per user
 receipt_sessions = {}
-
 
 class Receipt:
     def __init__(self, user_id):
@@ -87,11 +93,15 @@ class Receipt:
             case 12:
                 await ctx.send("Insira o RAC(y/N).")
 
-
             case _:
                 await ctx.send("Formulário concluído!")
                 await ctx.send(self.data)
+
                 del receipt_sessions[self.user_id]  # Remove session
+                
+                sheet = sheets.Sheets()
+                sheet.addEntry(self.data)
+                del sheet
 
     async def handle_response(self, message):
         """Processes user responses for each form step."""
@@ -283,6 +293,11 @@ async def reset(ctx):
 async def on_ready():
     print(f"✅ Logged in as {bot.user}")
 
+token = None
+with open("keys/token.txt") as fin:
+    token = fin.readline()
 
-# Run bot
-bot.run("")
+if token:
+    bot.run(token)
+else:
+    raise ValueError("Invalid token")

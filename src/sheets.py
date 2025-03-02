@@ -21,10 +21,6 @@ class Sheets:
 
     def addEntry(self, data: dict):
 
-        if not len(data.keys()) == 12:
-            print("Bad data")
-            return
-
         request = {
             "requests": [
                 {
@@ -34,7 +30,7 @@ class Sheets:
                             "startRowIndex": self.getLastRow(),
                             "endRowIndex": self.getLastRow() + 1,
                             "startColumnIndex": 0,
-                            "endColumnIndex": 12
+                            "endColumnIndex": len(data.values())
                         },
                         "rows": [
                             {
