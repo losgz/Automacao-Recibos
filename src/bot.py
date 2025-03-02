@@ -167,7 +167,7 @@ class Receipt:
                 case 5:
                     try:
                         data = message.content.split("/")
-                        assert 0 <= int(data[0]) <= 1999 and len(data[0]) == 4
+                        assert 0 <= int(data[0]) <= 9999 and len(data[0]) == 4
                         assert 1 <= int(data[1]) <= 12 and 1 <= len(data[1]) <= 2
                         assert 1 <= int(data[2]) <= 31 and 1 <= len(data[2]) <= 2
                         self.data["date"] = message.content

@@ -7,7 +7,7 @@ SCOPES = [
 ]
 
 SERVICE_ACCOUNT_FILE = 'keys/receiptautomationaettua-2e51520e8323.json'
-SPREADSHEET_ID = "18iAm74cWxhvfPZSxaP9a0UTD8_5v5kV-wXnEwqPaVTw"
+SPREADSHEET_ID = "1yT758a92j-Bge0dNhVGqP-Y0KgIcoupMPDI5TOHgZZg"
 
 class Sheets:
 
@@ -15,8 +15,6 @@ class Sheets:
         #Client Auth
         creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
         self.service = build('sheets', 'v4', credentials=creds)
-        self.sheet_metadata = self.service.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
-        
         self.lastRow: int = None
 
     def addEntry(self, data: dict):
@@ -68,12 +66,12 @@ class Sheets:
             ]
         }
 
-        self.batch(request, SPREADSHEET_ID)
+        self.batch(request)
         self.lastRow += 1
 
-    def batch(self, request: dict, spreadID: int = 0):
+    def batch(self, request: dict):
         response = self.service.spreadsheets().batchUpdate(
-                spreadsheetId=spreadID,
+                spreadsheetId=SPREADSHEET_ID,
                 body=request
                 ).execute()
         
