@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
 import sheets
+import os
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
 # Enable all necessary intents
 intents = discord.Intents.default()
@@ -34,22 +38,27 @@ AREAS = [
     "Outros",
 ]
 
-DOC_TYPE = [
-    "Ato Único",
-    "Estrangeiro",
-    "Fatura",
-    "Fatura-Recibo",
-    "Recibo-Verde"
-]
+DOC_TYPE = ["Ato Único", "Estrangeiro", "Fatura", "Fatura-Recibo", "Recibo-Verde"]
+
+RECEIPT_PHOTO_FOLDER_ID = "1DJMhk4YbjhQyNBwZhzREXL5Vga2oXMn-"
+
+
+SCOPES = ["https://www.googleapis.com/auth/drive"]
+SERVICE_ACCOUNT_FILE = "keys/receiptautomationaettua-2e51520e8323.json"
 
 # Dictionary to track forms per user
 receipt_sessions = {}
+
 
 class Receipt:
     def __init__(self, user_id):
         self.user_id = user_id
         self.data = {}
         self.form_step = 1
+        creds = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE, scopes=SCOPES
+        )
+        self.service = build("drive", "v3", credentials=creds)
 
     async def rec_form(self, ctx):
         """Handles the form process step-by-step."""
@@ -80,12 +89,12 @@ class Receipt:
 
             case 8:
                 await ctx.send("Insira a atividade.")
-            
+
             case 9:
                 await ctx.send("Insira a descrição.")
 
             case 10:
-                await ctx.send("Insira o link.")
+                await ctx.send("Insira a imagem do documento")
 
             case 11:
                 await ctx.send("Insira o PAJ(y/N).")
@@ -98,12 +107,12 @@ class Receipt:
                 await ctx.send(self.data)
 
                 del receipt_sessions[self.user_id]  # Remove session
-                
+
                 sheet = sheets.Sheets()
                 sheet.addEntry(self.data)
                 del sheet
 
-    async def handle_response(self, message):
+    async def handle_response(self, message: discord.Message):
         """Processes user responses for each form step."""
         try:
             match self.form_step:
@@ -204,9 +213,46 @@ class Receipt:
                     self.form_step += 1
                     await self.rec_form(message.channel)
 
-                # Link Fatura
+                # Imagem Fatura
                 case 10:
-                    self.data["link"] = message.content
+                    file_link = ""
+                    if message.attachments:
+                        att = message.attachments[0]
+                        if att.content_type.startswith("image/"):
+
+                            # faz download da imagem
+                            image_data = await att.read()
+                            filename = att.filename
+
+                            with open(filename, "wb") as f:
+                                f.write(image_data)
+
+                            file_metadata = file_metadata = {
+                                "name": filename,
+                                "parents": [RECEIPT_PHOTO_FOLDER_ID],
+                            }
+
+                            media = MediaFileUpload(filename, mimetype=att.content_type)
+                            uploaded_file = (
+                                self.service.files()
+                                .create(
+                                    body=file_metadata, media_body=media, fields="id"
+                                )
+                                .execute()
+                            )
+
+                            uploaded_file_id = uploaded_file.get("id")
+
+                            self.service.permissions().create(
+                                fileId=uploaded_file_id,
+                                body={"type": "anyone", "role": "reader"},
+                            ).execute()
+
+                            file_link = f"https://drive.google.com/file/d/{uploaded_file_id}/view"
+
+                            os.remove(filename)
+
+                    self.data["link"] = file_link
                     self.form_step += 1
                     await self.rec_form(message.channel)
 
@@ -223,8 +269,7 @@ class Receipt:
                     self.data["rac"] = check
                     self.form_step += 1
                     await self.rec_form(message.channel)
-                    
-                    
+
         except ValueError:
             await message.channel.send("Por favor, insira um número válido.")
 
@@ -292,6 +337,7 @@ async def reset(ctx):
 @bot.event
 async def on_ready():
     print(f"✅ Logged in as {bot.user}")
+
 
 token = None
 with open("keys/token.txt") as fin:
